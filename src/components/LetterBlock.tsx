@@ -3,7 +3,8 @@ import React from "react";
 const LetterBlock: React.FC<{
   isGreen?: boolean;
   isBlue?: boolean;
-}> = ({ isGreen, isBlue, children }: any) => {
+  isActive?: boolean;
+}> = ({ isGreen, isBlue, isActive, children }: any) => {
   const backgroundColor = isGreen ? "green" : isBlue ? "blue" : "#222";
   return (
     <div
@@ -17,7 +18,8 @@ const LetterBlock: React.FC<{
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        marginRight: "10px"
+        marginRight: "10px",
+        outline: isActive ? "1px solid white" : ""
       }}
     >
       {children}

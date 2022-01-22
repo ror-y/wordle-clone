@@ -5,7 +5,8 @@ import config from "../config";
 const handleWordSubmission = (
   idx: number,
   targetWord: string,
-  setGuessedWords: any
+  setGuessedWords: any,
+  successCb: any
 ) => (guessedWord: string) => {
   const isOverlap = targetWord
     .split("")
@@ -19,7 +20,6 @@ const handleWordSubmission = (
     }).filter(onlyDefineds) as Array<number>;
 
     const uncommonIndices = times(config.WORD_LENGTH, (idx) => {
-      console.log("guessed word:", guessedWord);
       if (
         targetWord.includes(guessedWord[idx]) &&
         !commonIndices.includes(idx)
@@ -38,6 +38,10 @@ const handleWordSubmission = (
         }
       ];
     });
+
+    if (guessedWord === targetWord) {
+      successCb();
+    }
   }
 };
 

@@ -10,6 +10,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { TGuessedWord } from "../types";
 import dictionary from "../data/dictionary";
+import Confetti from "react-confetti";
+import { useWindowSize } from "@react-hook/window-size";
 
 export default function App() {
   const [guessedWords, setGuessedWords] = useState<Array<TGuessedWord>>([]);
@@ -17,8 +19,16 @@ export default function App() {
   console.log("tw", targetWord);
   const [guessedWordIndeces, setGuessedWordIndeces] = useState([]);
   const [isError, setIsError] = useState(false);
+  const [width, height] = useWindowSize();
+  const [userWon, setUserWon] = useState(false);
 
-  function evaluateGuessedWords() {}
+  function evaluateGuessedWords() {
+    const isGameOver = guessedWords.length === config.ATTEMPTS_COUNT;
+    const isWordGuessed = guessedWords;
+    if (isGameOver) {
+      alert("GAME OVER!");
+    }
+  }
 
   useEffect(() => {
     handleInvalidWord(setIsError, targetWord, () => {
@@ -31,20 +41,33 @@ export default function App() {
   useEffect(evaluateGuessedWords, [guessedWords]);
 
   return (
-    <div className="App">
+    <div
+      className="App"
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }}
+    >
       <ToastContainer />
       {isError ? (
         <></>
       ) : (
         <div>
-          <h1>Worlde</h1>
+          {userWon && (
+            <Confetti width={width} height={height} recycle={false} />
+          )}
           {times(config.ATTEMPTS_COUNT, (idx) => (
             <InputThatLooksLikeWordBlock
               key={idx}
               handleWordSubmission={handleWordSubmission(
                 idx,
                 targetWord,
-                setGuessedWords
+                setGuessedWords,
+                () => {
+                  setUserWon(true);
+                  toast("Well done! You Win!");
+                }
               )}
               guessedWord={guessedWords[idx]}
             />
